@@ -1,0 +1,28 @@
+#chart-line {
+    height: 400px;
+    border-top: 1px solid #ccc;
+}
+
+.row-fluid{
+    margin-bottom: 20px;
+}
+
+.row-fluid .span4{
+    height: 80px;
+    border-right: 1px solid #ccc;
+}
+
+.row-fluid .span4:last-child{
+    border: 0;
+}
+
+.stat .title{
+    color: #666;
+    font-size: 14px;
+}
+
+.stat .value{
+    font-size: 50px;
+    line-height: 60px;
+    text-align: center;
+}
