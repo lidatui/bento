@@ -19,6 +19,7 @@
           [:h3 "配置"]
           [:ul
             [:li [:a {:href "users.html"} "人员管理"]]
+            [:li [:a {:href "plans.html"} "预定计划"]]
           ]
         ]
       ]

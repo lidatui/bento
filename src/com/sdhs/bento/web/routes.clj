@@ -9,7 +9,8 @@
             [compojure.handler :as handler]
             [compojure.response :as response]
             [clj-json.core :as json]
-            [com.sdhs.bento.repo.users :as users]))
+            [com.sdhs.bento.repo.users :as users]
+            [com.sdhs.bento.repo.plans :as plans]))
 
 
 (defn json-response [data & [status]]

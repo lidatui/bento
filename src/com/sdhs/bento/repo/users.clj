@@ -1,14 +1,7 @@
 (ns com.sdhs.bento.repo.users
+  (:use com.sdhs.bento.repo.db)
   (:require [clojureql.core :as cql]))
 
-
-(def db {:classname "com.mysql.jdbc.Driver"
-         :subprotocol "mysql"
-         :user "root"
-         :password ""
-         :subname "//127.0.0.1:3306/bento?useUnicode=true&characterEncoding=UTF-8"})
-
-(alter-var-root #'clojureql.core/*debug* (constantly true))
 
 (defn find-all [page limit]
   @(-> (cql/table db :users)
