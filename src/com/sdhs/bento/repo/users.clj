@@ -3,12 +3,16 @@
   (:require [clojureql.core :as cql]))
 
 
-(defn find-all [page limit]
-  @(-> (cql/table db :users)
+(defn find-all
+  ([]
+    @(-> (cql/table db :users)))
+
+  ([page limit]
+    @(-> (cql/table db :users)
      (cql/sort [:id#desc])
-     (cql/take (+ limit (* page limit)))
-     (cql/drop (* page limit))
-   ))
+     (cql/take (+ limit (* (- page 1) limit)))
+     (cql/drop (* (- page 1) limit))
+   )))
 (defn count-all []
   (:cnt (first @(-> (cql/table db :users) (cql/aggregate [:count/id :as :cnt])))))
 

@@ -10,7 +10,8 @@
             [compojure.response :as response]
             [clj-json.core :as json]
             [com.sdhs.bento.repo.users :as users]
-            [com.sdhs.bento.repo.plans :as plans]))
+            [com.sdhs.bento.repo.plans :as plans]
+            [com.sdhs.bento.repo.orders :as orders]))
 
 
 (defn json-response [data & [status]]
@@ -22,13 +23,29 @@
 (defroutes main-routes
   (GET "/" [] (index-page) )
 
-  (GET "/main.html" [] (main-page))
+  (GET "/main.html" [] (main-page (users/find-all)))
 
+
+  ;user
   (GET "/users.html" [] (users-page))
-  (GET "/users" {params :params} (json-response {:items (users/find-all (. Integer parseInt (:page params)) (. Integer parseInt (:limit params)))
-                                                 :totalCount (users/count-all)}))
-  (POST "/user" {params :params} (users/save params) (json-response {:msg "success"}))
-  (DELETE "/user" {params :params} (println (:id params)) (users/delete (:id params)) (json-response {:msg "success"}))
+  (GET "/users" {params :params}
+    (json-response {:items (users/find-all (. Integer parseInt (:page params)) (. Integer parseInt (:limit params)))
+                    :totalCount (users/count-all)}))
+  (POST "/user" {params :params}
+    (users/save params)
+    (json-response {:msg "success"}))
+  (DELETE "/user" {params :params}
+    (users/delete (:id params))
+    (json-response {:msg "success"}))
+
+
+  ;order
+  (POST "/order" {params :params}
+    (orders/save-list
+      (:planId params)
+      (:createUserId params)
+      (:userIds params))
+    (json-response {:msg "success"}))
 
   (route/resources "/")
   (route/not-found "Page not found"))

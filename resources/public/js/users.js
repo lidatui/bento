@@ -60,7 +60,7 @@ $(document).ready(function(){
             if(params.id){
                 loadUsers();
             }else{
-                loadUsers(0);
+                loadUsers(1);
             }
 
             $('#user-modal').modal('hide');
@@ -100,7 +100,7 @@ $(document).ready(function(){
         $(this).addClass('warning');
     });
 
-    loadUsers(0,12);
+    loadUsers(1,12);
 });
 
 var loadUsers = function (pageNo, pageSize){
@@ -109,7 +109,7 @@ var loadUsers = function (pageNo, pageSize){
         $('#userPaginator').data('pageNo',pageNo);
     }else{
         pageNo = $('#userPaginator').data('pageNo');
-        pageNo = pageNo >=0 ? pageNo : 0;
+        pageNo = pageNo >=1 ? pageNo : 1;
     }
     if(pageSize >= 1){
         $('#userPaginator').data('pageSize',pageSize);
@@ -155,40 +155,49 @@ var loadUsers = function (pageNo, pageSize){
     });
 }
 
-var renderPaginator = function (ulId,pageNo, totalCount, pageSize ,load){
+var renderPaginator = function (ulId,page, totalCount, limit ,load){
     var $ul = $('#'+ulId).empty();
-    var totalPage = totalCount % pageSize === 0 ? parseInt(totalCount/pageSize) : parseInt(totalCount/pageSize) + 1;
+    var totalPage = totalCount % limit === 0 ? parseInt(totalCount/limit) : parseInt(totalCount/limit) + 1;
     totalPage = totalPage ? totalPage : 0;
     if(totalPage === 0){
-        pageNo = 0;
-    }else if(pageNo > totalPage){
-        pageNo = totalPage;
-    }else if(pageNo < 1 && totalPage != 0){
-        pageNo = 0;
+        page = 1;
+    }else if(page > totalPage){
+        page = totalPage;
+    }else if(page < 1 && totalPage != 0){
+        page = 1;
     }
     //
     var $prev = $('<li><a>«</a></li>');
-    if(pageNo<=0){
+    if(page<=1){
         $prev.addClass('disabled');
     }else{
         $prev.find('a').on('click', function(e){
             e.preventDefault();
-            load(pageNo-1,pageSize)
+            load(page-1,limit)
+        });
+    }
+    var $prev = $('<li><a>«</a></li>');
+    if(page<=1){
+        $prev.addClass('disable');
+    }else{
+        $prev.find('a').on('click', function(){
+            e.preventDefault();
+            load(page-1,limit)
         });
     }
     $ul.append($prev);
     /////
     var list = [1];
-    if(pageNo+1 > 4 ){
+    if(page+1 > 4 ){
         list.push('...');
     }
     for(var i= 0; i < 5; i++){
-        var no = pageNo - 1 + i;
+        var no = page - 2 + i;
         if(no > 1 && no <= totalPage-1){
             list.push(no);
         }
     }
-    if(pageNo+2 < totalPage-1){
+    if(page+1 < totalPage-1){
         list.push('...');
     }
     if(totalPage>1){
@@ -198,24 +207,24 @@ var renderPaginator = function (ulId,pageNo, totalCount, pageSize ,load){
         var $li = $('<li><a></a></li>');
         if(item === '...'){
             $li.find('a').text('...');
-        }else if(item === pageNo+1){
+        }else if(item === page){
             $li.addClass('active').find('a').text(item);
         }else{
             $li.find('a').text(item).prop('title','第'+item+'页').on('click', function(e){
                 e.preventDefault();
-                load(item-1,pageSize);
+                load(item,limit);
             });
         }
         $ul.append($li);
     });
     //
     var $next = $('<li><a title="下一页">»</a></li>');
-    if(pageNo+1>=totalPage){
+    if(page>=totalPage){
         $next.addClass('disabled');
     }else{
         $next.find('a').on('click', function(e){
             e.preventDefault();
-            load(pageNo+1,pageSize);
+            load(page+1,limit);
         });
     }
     $ul.append($next);

@@ -1,5 +1,61 @@
 
 $(document).ready(function(){
+
+    $("#orderUser").select2({
+        width: '100%'
+    });
+
+    $('#order-add').on('click', function(){
+        $('#order-modal').modal('show');
+    });
+
+    $('#order-save').on('click', function(){
+        var selected = $('#orderUser').select2('val');
+        console.log(selected);
+
+        if(selected.length === 0){
+            $('#orderUser').parent().parent().addClass('error');
+            $('#orderUser').next().show();
+            return;
+        }
+
+        var params = {
+            userIds: selected,
+            planId: 1,
+            createUserId: 1
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: 'order',
+            data: params,
+            dataType: 'text',
+            cache: false
+        }).done(function(result){
+                if(params.id){
+                    loadUsers();
+                }else{
+                    loadUsers(1);
+                }
+
+                $('#user-modal').modal('hide');
+                clearUserForm();
+            }).fail(function(data){
+                $('#user-modal .modal-body .alert-error').show().text(data.statusText + ': ' + data.responseText);
+            });
+
+
+        $('#order-modal').modal('hide');
+        $('#orderUser').select2('val', '');
+        $('#orderUser').parent().parent().removeClass('error');
+    });
+
+
+
+
+
+
+
     $('#chart-line').highcharts({
         chart: {
             type: 'line'

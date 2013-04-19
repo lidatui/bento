@@ -10,10 +10,24 @@
      (cql/drop (* page limit))
    ))
 (defn count-all []
-  (:cnt (first @(-> (cql/table db :orders) (cql/aggregate [:count/id :as :cnt])))))
+  (:cnt (first @(-> (cql/table db :orders) (cql/aggregate [:count/id :as :cnt]))))
+)
 
 (defn save [order]
-  @(cql/update-in! (cql/table db :orders) (cql/where (= :id (:id order))) order))
+  (println order)
+  @(cql/update-in! (cql/table db :orders) (cql/where (= :id (:id order))) order)
+)
+
+(defn save-list [planId createUserId userIds]
+  (println userIds)
+  (dorun (map (fn [userId]
+                (save {:planId planId
+                       :userId userId
+                       :createUserId createUserId
+                       :createTime (java.util.Date.)}))
+              userIds))
+)
 
 (defn delete [id]
-  @(cql/disj! (cql/table db :orders) (cql/where (= :id id))))
+  @(cql/disj! (cql/table db :orders) (cql/where (= :id id)))
+)
