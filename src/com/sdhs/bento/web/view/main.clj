@@ -29,7 +29,7 @@
             [:div.span4
               [:div.title "您今晚在公司吃饭吗？"]
               [:div {:style "text-align: center;padding:10px;"}
-                [:button#order-add.btn.btn-primary.btn-large "我要预订！"]
+                [:button#order-add.btn.btn-primary.btn-large {:disable "disable"} "别着急，预订还没开始"]
               ]
             ]
           ]

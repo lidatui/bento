@@ -38,8 +38,11 @@
     (users/delete (:id params))
     (json-response {:msg "success"}))
 
+  ;plan
+  (GET "/plan/now" [] (json-response {:id (:id (first (plans/get-by-now)))}))
 
   ;order
+
   (POST "/order" {params :params}
     (orders/save-list
       (:planId params)

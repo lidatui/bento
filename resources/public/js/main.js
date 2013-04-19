@@ -1,4 +1,6 @@
 
+
+
 $(document).ready(function(){
 
     $("#orderUser").select2({
@@ -52,6 +54,21 @@ $(document).ready(function(){
 
 
 
+    $.ajax({
+        type: 'GET',
+        url: 'plan/now',
+        data: {},
+        dataType: 'json',
+        cache: false
+    }).done(function(plan){
+        if(plan.id){
+            $('#order-add').text('我要预订晚餐！').prop('disabled','');
+        }else{
+            $('#order-add').text('别着急，预订还没开始').prop('disabled','disabled');
+        }
+    }).fail(function(data){
+
+    });
 
 
 
