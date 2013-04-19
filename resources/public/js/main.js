@@ -8,6 +8,8 @@ $(document).ready(function(){
     });
 
     $('#order-add').on('click', function(){
+        $('#orderUser').parent().parent().removeClass('error');
+        $('#orderUser').next().hide();
         $('#order-modal').modal('show');
     });
 
