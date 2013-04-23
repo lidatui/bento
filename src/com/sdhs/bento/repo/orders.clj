@@ -1,7 +1,15 @@
 (ns com.sdhs.bento.repo.orders
-  (:use com.sdhs.bento.repo.db)
+  (:use com.sdhs.bento.repo.db
+        [clj-time.core :only (date-time year month)]
+        clj-time.local
+        clj-time.coerce)
   (:require [clojureql.core :as cql]))
 
+(defn startMonth [date]
+  (to-date (date-time (year date) (month date) 1)))
+
+(defn endMonth [date]
+  (to-date (date-time (year date) (+ (month date) 1) 1)))
 
 (defn find-all [page limit]
   @(-> (cql/table db :orders)
@@ -31,3 +39,21 @@
 (defn delete [id]
   @(cql/disj! (cql/table db :orders) (cql/where (= :id id)))
 )
+
+
+(defn get-count-by-id [planId]
+  (:cnt (first  @(-> (cql/select (cql/table db :orders)
+                                 (cql/where (= :planId planId)))
+                     (cql/aggregate [:count/id :as :cnt])
+                 )))
+)
+
+(defn get-month-count []
+  (:cnt (first  @(-> (cql/select (cql/table db :orders)
+                       (cql/where (and (>= :createTime (startMonth (local-now))) (< :createTime (endMonth (local-now))))))
+
+                     (cql/aggregate [:count/id :as :cnt])
+                ))
+  )
+)
+

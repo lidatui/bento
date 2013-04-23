@@ -20,11 +20,11 @@
           [:div.row-fluid.stat
             [:div.span4
               [:div.title "本月晚饭预定人次累计："]
-              [:div.value "246"]
+              [:div#orderMonthCount.value "0"]
             ]
             [:div.span4
               [:div.title "今天晚饭已预定人数："]
-              [:div.value "15"]
+              [:div#orderCount.value "0"]
             ]
             [:div.span4
               [:div.title "您今晚在公司吃饭吗？"]

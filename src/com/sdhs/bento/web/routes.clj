@@ -50,6 +50,12 @@
       (:userIds params))
     (json-response {:msg "success"}))
 
+  (GET "/order/count" {params :params}
+    (json-response {:orderCount (orders/get-count-by-id (:planId params))}))
+  (GET "/order/monthCount" {params :params}
+    (json-response {:orderMonthCount (orders/get-month-count)}))
+
+
   (route/resources "/")
   (route/not-found "Page not found"))
 

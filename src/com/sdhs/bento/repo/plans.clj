@@ -9,3 +9,5 @@
   @(-> (cql/select (cql/table db :plans)
      (cql/where (and (<= :startTime (to-date (local-now))) (>= :endTime (to-date (local-now))))))
   ))
+
+

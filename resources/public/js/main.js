@@ -1,5 +1,41 @@
 
+var loadOrderCount = function(){
+    var planId = $.data($('body')[0], 'planId');
+    $.ajax({
+        type: 'GET',
+        url: 'order/count',
+        data: {planId: planId},
+        dataType: 'json',
+        cache: false
+    }).done(function(data){
+        if(data.orderCount){
+            $('#orderCount').text(data.orderCount);
+        }else{
+            $('#orderCount').text(0);
+        }
+    }).fail(function(data){
 
+    });
+}
+
+
+var loadOrderMonthCount = function(){
+    $.ajax({
+        type: 'GET',
+        url: 'order/monthCount',
+        data: {},
+        dataType: 'json',
+        cache: false
+    }).done(function(data){
+        if(data.orderMonthCount){
+            $('#orderMonthCount').text(data.orderMonthCount);
+        }else{
+            $('#orderMonthCount').text(0);
+        }
+    }).fail(function(data){
+
+    });
+}
 
 $(document).ready(function(){
 
@@ -36,22 +72,14 @@ $(document).ready(function(){
             dataType: 'text',
             cache: false
         }).done(function(result){
-                if(params.id){
-                    loadUsers();
-                }else{
-                    loadUsers(1);
-                }
-
-                $('#user-modal').modal('hide');
-                clearUserForm();
-            }).fail(function(data){
-                $('#user-modal .modal-body .alert-error').show().text(data.statusText + ': ' + data.responseText);
-            });
-
-
-        $('#order-modal').modal('hide');
-        $('#orderUser').select2('val', '');
-        $('#orderUser').parent().parent().removeClass('error');
+            $('#order-modal').modal('hide');
+            $('#orderUser').select2('val', '');
+            $('#orderUser').parent().parent().removeClass('error');
+            loadOrderCount();
+            loadOrderMonthCount();
+        }).fail(function(data){
+            $('#order-modal .modal-body .alert-error').show().text(data.statusText + ': ' + data.responseText);
+        });
     });
 
 
@@ -65,6 +93,8 @@ $(document).ready(function(){
     }).done(function(plan){
         if(plan.id){
             $('#order-add').text('我要预订晚餐！').prop('disabled','');
+            $.data($('body')[0],'planId',plan.id);
+            loadOrderCount();
         }else{
             $('#order-add').text('别着急，预订还没开始').prop('disabled','disabled');
         }
@@ -73,6 +103,7 @@ $(document).ready(function(){
     });
 
 
+    loadOrderMonthCount();
 
 
     $('#chart-line').highcharts({
