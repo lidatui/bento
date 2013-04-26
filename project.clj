@@ -1,4 +1,4 @@
-(defproject lunchbox "0.1.0"
+(defproject bento "0.1.0"
   :description ""
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [compojure "1.1.5"]

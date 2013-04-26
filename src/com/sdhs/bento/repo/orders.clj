@@ -11,6 +11,10 @@
 (defn endMonth [date]
   (to-date (date-time (year date) (+ (month date) 1) 1)))
 
+(defn get-by-planId-userId [planId userId]
+  @(-> (cql/select (cql/table db :orders) (cql/where (and (= :planId planId) (= :userId userId)))))
+)
+
 (defn find-all [page limit]
   @(-> (cql/table db :orders)
      (cql/sort [:id#desc])
@@ -22,17 +26,17 @@
 )
 
 (defn save [order]
-  (println order)
   @(cql/update-in! (cql/table db :orders) (cql/where (= :id (:id order))) order)
 )
 
 (defn save-list [planId createUserId userIds]
-  (println userIds)
   (dorun (map (fn [userId]
-                (save {:planId planId
-                       :userId userId
-                       :createUserId createUserId
-                       :createTime (java.util.Date.)}))
+                (if (zero? (count (get-by-planId-userId planId userId)))
+                  (save {:planId planId
+                         :userId userId
+                         :createUserId createUserId
+                         :createTime (java.util.Date.)}))
+                  ())
               userIds))
 )
 
